@@ -28,7 +28,7 @@ namespace blockget
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxFilePath = new System.Windows.Forms.TextBox();
@@ -38,7 +38,6 @@ namespace blockget
             this.textBoxUserName = new System.Windows.Forms.TextBox();
             this.buttonSend = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.FilenameBlockgetSearchTextBox = new System.Windows.Forms.TextBox();
             this.SearchButton = new System.Windows.Forms.Button();
@@ -89,7 +88,7 @@ namespace blockget
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(373, 330);
             this.richTextBox1.TabIndex = 3;
-            this.richTextBox1.Text = "";
+            this.richTextBox1.Text = "Check the console => Delegate to other threads to implement";
             // 
             // pictureBox1
             // 
@@ -129,11 +128,6 @@ namespace blockget
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
             // 
             // label3
             // 
@@ -275,6 +269,7 @@ namespace blockget
             this.ClientSize = new System.Drawing.Size(780, 614);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Blockget";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -288,16 +283,15 @@ namespace blockget
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxFilePath;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        public System.Windows.Forms.TextBox textBoxFilePath;
+        public System.Windows.Forms.RichTextBox richTextBox1;
         //public static System.Windows.Forms.RichTextBox richTextBox1; // It won't load => public static variable => need to invoke https://stackoverflow.com/questions/11995466/c-sharp-calling-form-show-from-another-thread
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxUserName;
-        private System.Windows.Forms.Button buttonSend;
+        public System.Windows.Forms.Button buttonSend;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonBrowse;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox FilenameBlockgetSearchTextBox;
         private System.Windows.Forms.Button SearchButton;
@@ -311,6 +305,10 @@ namespace blockget
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        //private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        //private System.Windows.Forms.ToolStripMenuItem executeToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
     }
 }
 

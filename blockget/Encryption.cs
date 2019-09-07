@@ -12,9 +12,7 @@ namespace blockget
 {
     class Encryption
     {
-        const int BYTES_TO_READ_FILE_COMP = sizeof(Int64);
-
-        public static string EncryptString(string key, string plainText)
+         public static string EncryptString(string key, string plainText)
         {
             byte[] iv = new byte[16];
             byte[] array;
@@ -148,7 +146,30 @@ namespace blockget
             return newFilePath;
         }
 
-        public static string DecryptFile(string path) {
+        public static string DecryptFile(string path)
+        {
+            //We remove .aes:
+            string newFilePath = path.Remove(path.Length - 4, 4);
+            //We change if the file already exist in the folder:
+            //string fileName = Path.GetFileNameWithoutExtension(newFilePath);
+            //string extension = Path.GetExtension(newFilePath);
+            //newFilePath = Path.GetDirectoryName(path) + "\\" + fileName + "-decrypted" + extension;
+
+            // For additional security Pin the password of your files
+            GCHandle gch = GCHandle.Alloc(Globals.ENC_PWD, GCHandleType.Pinned);
+            // Decrypt the file
+            FileDecrypt(@path, @newFilePath, Globals.ENC_PWD);
+            // To increase the security of the decryption, delete the used password from the memory !
+            ZeroMemory(gch.AddrOfPinnedObject(), Globals.ENC_PWD.Length * 2);
+            gch.Free();
+            // We can verify it by displaying its value later on the console (the password won't appear)
+            //Console.WriteLine("The given password is surely nothing: " + password);
+            //We can delete the aes file now
+            File.Delete(path);
+            return newFilePath;
+        }
+
+        public static string DecryptFileSeparateFolder(string path) {
             //We remove .aes:
             string newFilePath = path.Remove(path.Length - 4, 4); 
             //We change if the file already exist in the folder:
@@ -207,8 +228,10 @@ namespace blockget
             byte[] salt = GenerateRandomSalt();
 
             //create output file name
-            FileStream fsCrypt = new FileStream(inputFile + ".aes", FileMode.Create);
-            string newFilePath = inputFile + ".aes";
+            string fileName = Path.GetFileName(inputFile);
+            string newFilePath = Globals.OPERATION_FOLDER + fileName + ".aes"; //From Watcher
+            //string newFilePath = inputFile + ".aes"; //When SeparateFolder
+            FileStream fsCrypt = new FileStream(newFilePath, FileMode.Create);
 
             //convert password string to byte arrray
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
@@ -327,37 +350,6 @@ namespace blockget
 
         
 
-        static bool compare2FilesByBlocks(string file1 , string file2)
-        {
-            FileInfo first = new FileInfo(file1);
-            FileInfo second = new FileInfo(file2);
-
-            if (first.Length != second.Length)
-                return false;
-
-            if (string.Equals(first.FullName, second.FullName, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            int iterations = (int)Math.Ceiling((double)first.Length / BYTES_TO_READ_FILE_COMP);
-
-            using (FileStream fs1 = first.OpenRead())
-            using (FileStream fs2 = second.OpenRead())
-            {
-                byte[] one = new byte[BYTES_TO_READ_FILE_COMP];
-                byte[] two = new byte[BYTES_TO_READ_FILE_COMP];
-
-                for (int i = 0; i < iterations; i++)
-                {
-                    fs1.Read(one, 0, BYTES_TO_READ_FILE_COMP);
-                    fs2.Read(two, 0, BYTES_TO_READ_FILE_COMP);
-
-                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
-                        return false;
-                }
-            }
-            return true;
-        }
-
         //See Unit Test
         public static void testEncryptionString()
         {
@@ -370,7 +362,7 @@ namespace blockget
             string decrypted = DecryptFile(pathFile+".aes");
 
             //Assert
-            if (compare2FilesByBlocks(pathFile,decrypted)) Console.WriteLine("The 2 files are the same");
+            if (Filesys.compare2FilesByBlocks(pathFile,decrypted)) Console.WriteLine("The 2 files are the same");
             else Console.WriteLine("Oh oh the file hasn't been decrypted correctly.");
 
         }

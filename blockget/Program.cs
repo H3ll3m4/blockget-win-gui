@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Collections;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,8 +11,11 @@ namespace blockget
     {
         public const Int32 SPLIT_NB = 3;//Convert.ToInt32(3); // Unmodifiable
         public static String BLOCKGET_FILE_FOLDER = "C:\\Blockget\\"; // Unmodifiable
+        public static String OPERATION_FOLDER = "C:\\temp\\Blockget\\";
         public const String ENC_PWD = "ThePasswordToDecryptAndEncryptTheFile";
         public const String KEY = "f5a2916401ff69a95a0b8c7d575586e4";
+        public static String UserName = "?";
+
     }
 
 
@@ -27,6 +30,9 @@ namespace blockget
             //int SplitNb = Convert.ToInt32(5)
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Background: FileSystemWatcher: https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8
+            //myWatcher folderWatcher = new myWatcher();
+            //myWatcher.Run();
             //Application.Run(new Form1());
             //tests:
             //ClientIpfs.testIpfsDownload(); OK
@@ -34,10 +40,21 @@ namespace blockget
             //testSplitMergeEncryptedFile(); OK
             //Encryption.testEncryptionString(); OK
             //Split.testSplitMergeFile(); OK
-            Application.Run(new Form1());
-            //Background: FileSystemWatcher: https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8
-            Watcher folderWatcher = new Watcher();
-            Watcher.Run();
+            //Filesys fs;
+            //IpfsBlkchn ipfsblkchn;
+            //Queue displayQ;
+            //Form1 f = new Form1(fs, ipfsblkchn,displayQ); //impossible
+            Form1 f = new Form1();
+            Application.Run(f);
+            //Application.Run(new Form1());
+        }
+
+        static void createFolders()
+        {
+            if (!System.IO.Directory.Exists(Globals.BLOCKGET_FILE_FOLDER))
+                System.IO.Directory.CreateDirectory(Globals.BLOCKGET_FILE_FOLDER);
+            if (!System.IO.Directory.Exists(Globals.OPERATION_FOLDER))
+                System.IO.Directory.CreateDirectory(Globals.OPERATION_FOLDER);
         }
 
         //Split and Merge Encrypted File
